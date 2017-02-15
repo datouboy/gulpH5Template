@@ -2,8 +2,8 @@
  * 功能：
  * 1.音乐自动播放
  * 2.模拟Alert框
+ * 3.禁止页面默认的触摸滑动事件
  */
-
 
 //模拟Alert框
 function AlexAlertBox(obj){this.init(obj);}
@@ -98,6 +98,11 @@ AlexMusicBox.prototype = {
 }
 
 $(function($) {
+    //禁止页面默认的触摸滑动事件
+    document.addEventListener('touchmove', function (event) {
+        event.preventDefault();
+    }, false);
+    
     var musicBox = new AlexMusicBox({music:musicMp3});
     musicBox;
 });

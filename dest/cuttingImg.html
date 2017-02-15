@@ -12,15 +12,22 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
     <meta name="msapplication-tap-highlight" content="no">
     <link rel="stylesheet" type="text/css" href="./css/common.css">
-    <script type="text/javascript" src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+    <script type="text/javascript" src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
     <script type="text/javascript" src="http://cdn.bootcss.com/iScroll/5.2.0/iscroll.min.js"></script>
+    <script type="text/javascript" src="http://cdn.bootcss.com/hammer.js/2.0.8/hammer.min.js"></script>
     <script type="text/javascript">const siteUrl="./",musicMp3="http://sinopec-bp.oss-cn-shanghai.aliyuncs.com/test/music2.mp3"</script>
     <script type="text/javascript" src="./js/common.js"></script>
 </head>
 <body>
-<script type="text/javascript">alertFun.alertBox("hahahahhahaha")</script>
+<div id="showInfo">调试信息：</div>
+<div style="position:absolute;width:60%;height:20rem;left:20%;top:10rem;border:1px solid #ccc;background:#000">
+    <div class="cuttingImgBox" id="cuttingImgBox">
+        <img id="oldImage" src="./images/test_1.jpg">
+        <input type="hidden" name="picWidth">
+        <input type="hidden" name="picLeft">
+        <input type="hidden" name="picTop">
+    </div>
+</div>
 </body>
-<!--
 <script type="text/javascript" src="./js/app.js"></script>
--->
 </html>

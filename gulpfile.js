@@ -58,6 +58,7 @@ gulp.task('less', function () {
 			//调用CSS前缀补全插件
 			plugins: [autoprefix]
 		}))
+		.pipe(concat('common.css'))
 		.pipe(gulp.dest(config.dest+'/css'))
 		.pipe(connect.reload());
 });
@@ -69,6 +70,7 @@ gulp.task('miniLess', function () {
 			//调用CSS前缀补全插件
 			plugins: [autoprefix]
 		}))
+		.pipe(concat('common.css'))
 		.pipe(minifyCss())
 		.pipe(gulp.dest(config.dest+'/css'))
 		.pipe(connect.reload());
