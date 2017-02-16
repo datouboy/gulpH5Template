@@ -23,7 +23,13 @@ var oldImageInfo = {
 	//获取图片的宽高比
 	imgAspectRatio : $('#oldImage').width() / $('#oldImage').height(),
 	//获取截图框的宽高比
-	boxAspectRatio : $('#cuttingImgBox').width() / $('#cuttingImgBox').height()
+	boxAspectRatio : $('#cuttingImgBox').width() / $('#cuttingImgBox').height(),
+	//touchend时间戳
+	touchendTime : 0,
+	//缩放完成时间戳
+	pinchendTime : 0,
+	//图片缩放状态（配合双击事件）
+	zoomState : true
 }
 
 myCuttingImgBox.addEventListener('touchstart',touch,false);
@@ -37,24 +43,56 @@ function touch (event){
             oldImageInfo.tempTop = $('#oldImage').position().top;
             break;
         case "touchend":
-        	console.log('touchend');
+        	var touchendTime = new Date().getTime();
+        	if(touchendTime - oldImageInfo.pinchendTime > 300){
+        	//判断双击时间间隔
+	        	if(touchendTime - oldImageInfo.touchendTime < 300){
+	        		if(oldImageInfo.zoomState){
+		        		$('#oldImage').css({
+					    	width: $('#cuttingImgBox').height() * oldImageInfo.imgAspectRatio,
+					    	height : $('#cuttingImgBox').height(),
+					    	left: ($('#cuttingImgBox').width() - ($('#cuttingImgBox').height() * oldImageInfo.imgAspectRatio))/2,
+					    	top: 0
+					    });
+					    oldImageInfo.zoomState = false;
+		        	}else{
+		        		$('#oldImage').css({
+					    	width: oldImageInfo.width,
+					    	height : oldImageInfo.height,
+					    	left: 0,
+					    	top: 0
+					    });
+					    oldImageInfo.zoomState = true;
+		        	}
+		        	setTimeout(function(){
+					    oldImageInfo.now_width = $('#oldImage').width();
+						oldImageInfo.now_height = $('#oldImage').height();
+						oldImageInfo.left = $('#oldImage').position().left;
+					    oldImageInfo.top = $('#oldImage').position().top;
+				    },20);
+	        	}
+        	}
+        	oldImageInfo.touchendTime = new Date().getTime();
             break;
     }
 }
 
 mc.on('pan', function(ev) {
     //console.log(ev);
-    $('#oldImage').css({
-    	left: oldImageInfo.left + ev.deltaX,
-    	top : oldImageInfo.top + ev.deltaY
-    });
-    if(ev.isFinal){
-    	
-    	checkError();
-		setTimeout(function(){
-			oldImageInfo.left = $('#oldImage').position().left;
-    		oldImageInfo.top = $('#oldImage').position().top;
-		},230);
+    if(new Date().getTime() - oldImageInfo.pinchendTime > 100){
+	    $('#oldImage').css({
+	    	left: oldImageInfo.left + ev.deltaX,
+	    	top : oldImageInfo.top + ev.deltaY
+	    });
+	    if(ev.isFinal){
+	    	
+	    	checkError();
+			setTimeout(function(){
+				oldImageInfo.left = $('#oldImage').position().left;
+	    		oldImageInfo.top = $('#oldImage').position().top;
+			},230);
+		}
+		//$('#showInfo').append('pan ');
 	}
 });
 
@@ -79,7 +117,7 @@ mc.on('pinchend', function(ev) {
     	//图片高度大于截图框
     	if(oldImageInfo.imgAspectRatio < oldImageInfo.boxAspectRatio){
     		//以图片最小高度为准
-    		$('#showInfo').html('调试信息：' + $('#cuttingImgBox').width() + ' --- ' + ($('#cuttingImgBox').width() - ($('#cuttingImgBox').width() * oldImageInfo.imgAspectRatio))/2);
+    		//$('#showInfo').html('调试信息：' + $('#cuttingImgBox').width() + ' --- ' + ($('#cuttingImgBox').width() - ($('#cuttingImgBox').width() * oldImageInfo.imgAspectRatio))/2);
 
 			$('#oldImage').css({
 		    	width: $('#cuttingImgBox').height() * oldImageInfo.imgAspectRatio,
@@ -105,7 +143,8 @@ mc.on('pinchend', function(ev) {
 		oldImageInfo.left = $('#oldImage').position().left;
 	    oldImageInfo.top = $('#oldImage').position().top;
     },230);
-
+    oldImageInfo.pinchendTime = new Date().getTime();
+	//$('#showInfo').append('pinchend ');
 });
 
 function checkError(){
