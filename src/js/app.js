@@ -1,5 +1,6 @@
 /*
  * Html5裁图工具，配合阿里云OSS使用
+ * 基于jquery.js,Hammer.js
  */
 function AlexCuttingImg(obj){this.init(obj);}
 AlexCuttingImg.prototype = {
@@ -7,6 +8,7 @@ AlexCuttingImg.prototype = {
     	var _self = this;
     	this.cuttingImgBoxID = $('#'+obj.cuttingImgBoxID);
     	this.imgID = $('#'+obj.imgID);
+    	this.outside = obj.outside;
     	this.myCuttingImgBox = document.getElementById(obj.imgID);
     	this.imageInfo = {
 			left : 0,
@@ -46,10 +48,40 @@ AlexCuttingImg.prototype = {
 		mc.on('pan', function(ev) {
 		    if(new Date().getTime() - _self.imageInfo.pinchendTime > 100){
 		    	if(ev.center.y > 0){
-				    _self.imgID.css({
-				    	left: _self.imageInfo.left + ev.deltaX,
-				    	top : _self.imageInfo.top + ev.deltaY
-				    });
+		    		//判断是否图片必须填满裁剪框
+		    		//如果设置图片必须填满裁剪框，则检测图片位置，超出边界停止执行后续位移
+		    		var positionOut = {
+		    			left:false,
+		    			top:false
+		    		}
+		    		if(_self.outside){
+		    			if(_self.imageInfo.left + ev.deltaX > 0){
+		    				_self.imgID.css('left', 0);
+		    				positionOut.left = true;
+		    			}else if(_self.imageInfo.left + ev.deltaX < -(_self.imgID.width() - _self.cuttingImgBoxID.width())){
+		    				_self.imgID.css('left', -(_self.imgID.width() - _self.cuttingImgBoxID.width()));
+		    				positionOut.left = true;
+		    			}
+		    			if(_self.imageInfo.top + ev.deltaY > 0){
+		    				_self.imgID.css('top', 0);
+		    				positionOut.top = true;
+		    			}else if(_self.imageInfo.top + ev.deltaY < -(_self.imgID.height() - _self.cuttingImgBoxID.height())){
+		    				_self.imgID.css('top', -(_self.imgID.height() - _self.cuttingImgBoxID.height()));
+		    				positionOut.top = true;
+		    			}
+		    		}
+
+		    		if(!positionOut.left){
+					    _self.imgID.css({
+					    	left: _self.imageInfo.left + ev.deltaX
+					    });
+				    }
+				    if(!positionOut.top){
+					    _self.imgID.css({
+					    	top : _self.imageInfo.top + ev.deltaY
+					    });
+				    }
+
 				    if(ev.isFinal){
 				    	_self.checkError();
 						setTimeout(function(){
@@ -67,14 +99,41 @@ AlexCuttingImg.prototype = {
 			}
 		});
 
+		var imgSizeOut = false;
 		mc.on('pinch', function(ev) {
 			var scale = Math.round(ev.scale*100)/100;
-			_self.imgID.css({
-		    	width: _self.imageInfo.now_width * scale,
-		    	height : _self.imageInfo.now_height * scale,
-		    	left: _self.imageInfo.tempLeft + ((_self.imageInfo.now_width - _self.imgID.width())/2),
-		    	top: _self.imageInfo.tempTop + ((_self.imageInfo.now_height - _self.imgID.height())/2)
-		    });
+			//判断是否图片必须填满裁剪框
+		    //如果设置图片必须填满裁剪框，则检测图片位置，超出边界停止执行后续位移
+		    imgSizeOut = false;
+		    //$('#showInfo').append(_self.imgID.width() - _self.cuttingImgBoxID.width() + ' | ');
+			if(_self.outside){
+				if(_self.imgID.width() * scale < _self.cuttingImgBoxID.width()){
+					_self.imgID.css({
+						width: _self.imageInfo.width,
+						height: _self.imageInfo.height,
+						left: 0,
+						top: 0
+					});
+		    		imgSizeOut = true;
+				}else if(_self.imgID.height() * scale < _self.cuttingImgBoxID.height()){
+					_self.imgID.css({
+						width: _self.imageInfo.width,
+						height: _self.imageInfo.height,
+						left: 0,
+						top: 0
+					});
+		    		imgSizeOut = true;
+				}
+			}
+
+			if(!imgSizeOut){
+				_self.imgID.css({
+			    	width: _self.imageInfo.now_width * scale,
+			    	height : _self.imageInfo.now_height * scale,
+			    	left: _self.imageInfo.tempLeft + ((_self.imageInfo.now_width - _self.imgID.width())/2),
+			    	top: _self.imageInfo.tempTop + ((_self.imageInfo.now_height - _self.imgID.height())/2)
+			    });
+		    }
 		});
 
 		mc.on('pinchend', function(ev) {
@@ -251,5 +310,7 @@ AlexCuttingImg.prototype = {
 		}
 	}
 }
-var cuttingImg = new AlexCuttingImg({cuttingImgBoxID:'cuttingImgBox', imgID:'oldImage'});
+
+//初始化图片裁剪框，outside：是否图片必须填满裁剪框
+var cuttingImg = new AlexCuttingImg({cuttingImgBoxID:'cuttingImgBox', imgID:'oldImage', outside:true});
 cuttingImg;
