@@ -188,23 +188,43 @@ AlexCuttingImg.prototype = {
 	        	if(touchendTime - _self.imageInfo.pinchendTime > 300){
 	        	//判断双击时间间隔
 		        	if(touchendTime - _self.imageInfo.touchendTime < 300){
-		        		if(_self.imageInfo.zoomState){
-			        		_self.imgID.css({
-						    	width: _self.cuttingImgBoxID.height() * _self.imageInfo.imgAspectRatio,
-						    	height : _self.cuttingImgBoxID.height(),
-						    	left: (_self.cuttingImgBoxID.width() - (_self.cuttingImgBoxID.height() * _self.imageInfo.imgAspectRatio))/2,
-						    	top: 0
-						    });
-						    _self.imageInfo.zoomState = false;
-			        	}else{
-			        		_self.imgID.css({
-						    	width: _self.imageInfo.width,
-						    	height : _self.imageInfo.height,
-						    	left: 0,
-						    	top: 0
-						    });
-						    _self.imageInfo.zoomState = true;
-			        	}
+		        		if(!_self.outside){
+			        		if(_self.imageInfo.zoomState){
+				        		_self.imgID.css({
+							    	width: _self.cuttingImgBoxID.height() * _self.imageInfo.imgAspectRatio,
+							    	height : _self.cuttingImgBoxID.height(),
+							    	left: (_self.cuttingImgBoxID.width() - (_self.cuttingImgBoxID.height() * _self.imageInfo.imgAspectRatio))/2,
+							    	top: 0
+							    });
+							    _self.imageInfo.zoomState = false;
+				        	}else{
+				        		_self.imgID.css({
+							    	width: _self.imageInfo.width,
+							    	height : _self.imageInfo.height,
+							    	left: 0,
+							    	top: 0
+							    });
+							    _self.imageInfo.zoomState = true;
+				        	}
+				        }else{
+				        	if(!_self.imageInfo.zoomState){
+				        		_self.imgID.css({
+							    	width: _self.imageInfo.width,
+							    	height : _self.imageInfo.height,
+							    	left: 0,
+							    	top: 0
+							    });
+							    _self.imageInfo.zoomState = true;
+				        	}else{
+				        		_self.imgID.css({
+							    	width: _self.imageInfo.width*2,
+							    	height : _self.imageInfo.height*2,
+							    	left: -(_self.imageInfo.width/2),
+							    	top: -(_self.imageInfo.height/2)
+							    });
+							    _self.imageInfo.zoomState = false;
+				        	}
+				        }
 			        	
 					    _self.imageInfo.now_width = _self.imgID.width();
 						_self.imageInfo.now_height = _self.imgID.height();
