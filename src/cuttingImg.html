@@ -20,6 +20,7 @@
         const musicMp3 = 'http://sinopec-bp.oss-cn-shanghai.aliyuncs.com/test/music2.mp3';
     </script>
     <script type="text/javascript" src="./js/common.js"></script>
+    <script type="text/javascript" src="./js/cuttingImg.js"></script>
 </head>
 <body>
 <div id="showInfo">调试信息：</div>
@@ -35,5 +36,11 @@
     </div>
 </div>
 </body>
+<script type="text/javascript">
+$(function($) {
+    var cuttingImg = new AlexCuttingImg({cuttingImgBoxID:'cuttingImgBox', imgID:'oldImage', outside:true});
+    cuttingImg;
+});
+</script>
 <script type="text/javascript" src="./js/app.js"></script>
 </html>
