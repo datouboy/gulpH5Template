@@ -103,6 +103,9 @@ $(function($) {
         event.preventDefault();
     }, false);
     
-    var musicBox = new AlexMusicBox({music:musicMp3});
-    musicBox;
+    if(typeof(musicMp3) == "undefined"){
+    }else if(musicMp3 != '' && musicMp3 != null){
+        var musicBox = new AlexMusicBox({music:musicMp3});
+        musicBox;
+    }
 });
