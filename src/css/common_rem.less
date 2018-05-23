@@ -1,0 +1,102 @@
+@charset "utf-8";
+@import (reference) "import/commonConfig.less";
+@import (inline) "import/resetCss.css";
+
+.IIV::-webkit-media-controls-play-button,
+.IIV::-webkit-media-controls-start-playback-button {
+    opacity: 0;
+    pointer-events: none;
+    width: 5px;
+}
+
+.clearfix:after {content: ".";display: block;height: 0;clear: both;visibility: hidden;}
+.clearfix {display: inline-block;}
+/* Hides from IE-mac */
+* html .clearfix { height: 1%;}
+.clearfix {display: block;}
+
+a {-webkit-tap-highlight-color:transparent;}
+
+html {}
+body {
+    font-size: .24rem;
+    background: #00c5f7;
+    font-family:"microsoft yahei";
+}
+
+.musicMenu {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 1rem;
+    height: 1rem;
+    z-index: 99999;
+
+    .control {
+        position: absolute;
+        width: 1rem;
+        height: 1rem;
+
+        .control-after {
+            position: absolute;
+            width: .6rem;
+            height: .6rem;
+            left: 0;
+            bottom: 0;
+            background: url('../images/music_off.png') center center no-repeat;
+            background-size: 100% 100%;
+        }
+
+        &.show_loop {
+            background: url('../images/music_fly.gif') center center no-repeat;
+            background-size: 100% 100%;
+            
+            @keyframes musicMenu_animation {
+                0%   {transform: rotate(0deg);}
+                100% {transform: rotate(360deg);}
+            }
+            .control-after {
+                background: url('../images/music.png') center center no-repeat;
+                background-size: 100% 100%;
+                animation: musicMenu_animation 5s linear infinite;
+            }
+        }
+    }
+}
+
+.popBox {
+    display: none;
+    background: url('../images/black.png');
+    position: absolute;
+    z-index: 999999;
+    width: 100%;
+    height: 100%;
+
+    .alertBoxMarginTop {
+        height: 0;
+        line-height: 0px;
+    }
+
+    .alertText {
+        width: 6rem;
+        margin :0 auto;
+        padding: .2rem;
+        min-height: .5rem;
+        background: #fff;
+        border-radius: .1rem;
+        font-size: .28rem;
+
+        button {
+            display: block;
+            width: 100%;
+            height: 0.8rem;
+            margin-top: .2rem;
+            border: none;
+            background: #286090;
+            border: 1px solid ##204d74;
+            color: #fff;
+            border-radius: .1rem;
+            font-size: .28rem;
+        }
+    }
+}
